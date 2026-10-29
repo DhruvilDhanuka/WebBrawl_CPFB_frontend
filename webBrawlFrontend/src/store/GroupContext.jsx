@@ -101,21 +101,41 @@ export function GroupProvider({ children }) {
   };
 
   const removeMember = (groupId, memberId) => {
-    setGroups((prev) => {
-      const group = prev[groupId];
-      if (!group || !group.members?.[memberId]) return prev;
+    const group = groups[groupId];
+    if (!group || !group.members?.[memberId]) return false;
 
-      const updatedMembers = { ...group.members };
+    const memberName = group.members[memberId].name || "Member";
+    const involvedExpenses = (group.expenses || []).filter(
+      (exp) =>
+        exp.payerId === memberId ||
+        (Array.isArray(exp.participantIds) && exp.participantIds.includes(memberId))
+    );
+
+    if (involvedExpenses.length > 0) {
+      const count = involvedExpenses.length;
+      const confirmed = window.confirm(
+        `${memberName} is part of ${count} expense${count > 1 ? "s" : ""}. Are you sure you want to delete?`
+      );
+      if (!confirmed) return false;
+    }
+
+    setGroups((prev) => {
+      const g = prev[groupId];
+      if (!g || !g.members?.[memberId]) return prev;
+
+      const updatedMembers = { ...g.members };
       delete updatedMembers[memberId];
 
       return {
         ...prev,
         [groupId]: {
-          ...group,
+          ...g,
           members: updatedMembers,
         },
       };
     });
+
+    return true;
   };
 
   // Expense actions
