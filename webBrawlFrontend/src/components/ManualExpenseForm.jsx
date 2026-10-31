@@ -60,21 +60,21 @@ export default function ManualExpenseForm({ memberList, onAddExpense }) {
 
   if (memberList.length === 0) {
     return (
-      <section className="bg-white rounded-xl shadow-xs border border-slate-200 p-5">
-        <h2 className="text-lg font-bold text-slate-800 mb-2">Add Manual Expense</h2>
-        <p className="text-sm text-slate-400 italic">Please add members above before creating an expense.</p>
+      <section className="bg-[#0f1422] rounded-xl shadow-xs border border-slate-800 p-5">
+        <h2 className="text-lg font-bold text-white mb-2">Add Manual Expense</h2>
+        <p className="text-sm text-slate-500 italic">Please add members above before creating an expense.</p>
       </section>
     );
   }
 
   return (
-    <section className="bg-white rounded-xl shadow-xs border border-slate-200 p-5">
-      <h2 className="text-lg font-bold text-slate-800 mb-4">Add Manual Expense</h2>
+    <section className="bg-[#0f1422] rounded-xl shadow-xs border border-slate-800 p-5">
+      <h2 className="text-lg font-bold text-white mb-4">Add Manual Expense</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+            <label className="block text-xs font-semibold text-slate-400 uppercase mb-1">
               Description
             </label>
             <input
@@ -82,13 +82,13 @@ export default function ManualExpenseForm({ memberList, onAddExpense }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Night Canteen, Swiggy"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 bg-[#0b0f17] border border-slate-800 rounded-lg text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+            <label className="block text-xs font-semibold text-slate-400 uppercase mb-1">
               Amount (₹)
             </label>
             <input
@@ -98,7 +98,7 @@ export default function ManualExpenseForm({ memberList, onAddExpense }) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+              className="w-full px-3 py-2 bg-[#0b0f17] border border-slate-800 rounded-lg text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
               required
             />
           </div>
@@ -106,13 +106,13 @@ export default function ManualExpenseForm({ memberList, onAddExpense }) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+            <label className="block text-xs font-semibold text-slate-400 uppercase mb-1">
               Paid by
             </label>
             <select
               value={payerId}
               onChange={(e) => setPayerId(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+              className="w-full px-3 py-2 bg-[#0b0f17] border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
               required
             >
               <option value="">-- Select Payer --</option>
@@ -125,27 +125,27 @@ export default function ManualExpenseForm({ memberList, onAddExpense }) {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+            <label className="block text-xs font-semibold text-slate-400 uppercase mb-1">
               Date
             </label>
             <input
               type="date"
               value={expenseDate}
               onChange={(e) => setExpenseDate(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 bg-[#0b0f17] border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-semibold text-slate-600 uppercase">
+            <label className="text-xs font-semibold text-slate-400 uppercase">
               Split With
             </label>
             <button
               type="button"
               onClick={selectAllParticipants}
-              className="text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
+              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium cursor-pointer"
             >
               Select All
             </button>
@@ -159,8 +159,8 @@ export default function ManualExpenseForm({ memberList, onAddExpense }) {
                   key={m.id}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm font-medium cursor-pointer transition-colors ${
                     isChecked
-                      ? "bg-indigo-50 border-indigo-200 text-indigo-900"
-                      : "bg-slate-50 border-slate-200 text-slate-500"
+                      ? "bg-indigo-950/60 border-indigo-800 text-indigo-300"
+                      : "bg-[#0b0f17] border-slate-800 text-slate-400 hover:bg-slate-800/40"
                   }`}
                 >
                   <input
@@ -178,7 +178,7 @@ export default function ManualExpenseForm({ memberList, onAddExpense }) {
 
         <button
           type="submit"
-          className="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-lg transition-colors cursor-pointer shadow-xs"
+          className="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm rounded-lg transition-colors cursor-pointer shadow-xs"
         >
           Add Expense
         </button>
