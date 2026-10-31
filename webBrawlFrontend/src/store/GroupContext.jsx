@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { generateID } from "../utils/id";
 
 const STORAGE_KEY = "splitsmart_groups_v1";
@@ -26,7 +26,7 @@ export function GroupProvider({ children }) {
     }, [groups]);
 
     // Group actions
-    const createGroup = useCallback((name) => {
+    const createGroup = (name) => {
         const trimmedName = name?.trim();
         if (!trimmedName) return null;
 
