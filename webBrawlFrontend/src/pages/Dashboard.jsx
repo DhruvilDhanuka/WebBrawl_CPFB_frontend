@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGroups } from "../store/GroupContext";
 import { formatINR } from "../core/money";
+import { encodeGroupToUrl } from "../utils/share";
 
 export default function Dashboard() {
   const { groups, createGroup, deleteGroup, renameGroup } = useGroups();
   const navigate = useNavigate();
   const [newGroupName, setNewGroupName] = useState("");
+  const [copiedGroupId, setCopiedGroupId] = useState(null);
 
   const handleCreateGroup = (e) => {
     e?.preventDefault();
@@ -20,6 +22,16 @@ export default function Dashboard() {
     if (newName && newName.trim() !== "") {
       renameGroup(group.id, newName.trim());
     }
+  };
+
+  const handleShareGroup = (group) => {
+    const encoded = encodeGroupToUrl(group);
+    if (!encoded) return;
+    const url = `${window.location.origin}${window.location.pathname}#/join?data=${encoded}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedGroupId(group.id);
+      setTimeout(() => setCopiedGroupId(null), 2500);
+    });
   };
 
   const groupList = Object.values(groups || {});
@@ -145,6 +157,19 @@ export default function Dashboard() {
                         className="flex-1 py-2 px-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs rounded-lg transition-colors cursor-pointer text-center"
                       >
                         View Group
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleShareGroup(group)}
+                        className={`py-2 px-3 border font-medium text-xs rounded-lg transition-colors cursor-pointer ${
+                          copiedGroupId === group.id
+                            ? "bg-emerald-950/80 text-emerald-300 border-emerald-800"
+                            : "bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700/60"
+                        }`}
+                        title="Copy share link"
+                      >
+                        {copiedGroupId === group.id ? "Copied!" : "Share"}
                       </button>
 
                       <button

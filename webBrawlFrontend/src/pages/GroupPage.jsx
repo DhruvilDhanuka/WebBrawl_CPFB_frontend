@@ -3,6 +3,7 @@ import { useGroups } from "../store/GroupContext";
 import { useState } from "react";
 import { formatINR } from "../core/money";
 import { splitAmount } from "../core/split";
+import { encodeGroupToUrl } from "../utils/share";
 import ManualExpenseForm from "../components/ManualExpenseForm";
 import ReceiptScanner from "../components/ReceiptScanner";
 import ExpensesList from "../components/ExpensesList";
@@ -15,6 +16,7 @@ export default function GroupPage() {
   const [activeTab, setActiveTab] = useState("manual");
   const [newMember, setNewMember] = useState("");
   const [newMemberColor, setNewMemberColor] = useState("#3B82F6");
+  const [copied, setCopied] = useState(false);
 
   const group = groups[id];
   if (!group) {
@@ -83,6 +85,16 @@ export default function GroupPage() {
     }
   });
 
+  const handleShareGroup = () => {
+    const encoded = encodeGroupToUrl(group);
+    if (!encoded) return;
+    const url = `${window.location.origin}${window.location.pathname}#/join?data=${encoded}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
+
   return (
     <div className="min-h-screen bg-[#0b0f17] text-slate-100 pb-12">
       {/* Top Navbar */}
@@ -99,9 +111,21 @@ export default function GroupPage() {
             <div className="h-4 w-px bg-slate-800" />
             <h1 className="font-bold text-lg text-white truncate">{group.name}</h1>
           </div>
-          <span className="text-xs font-semibold px-2.5 py-1 bg-indigo-950/70 text-indigo-300 rounded-full border border-indigo-800/60">
-            {memberList.length} members
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleShareGroup}
+              className={`text-xs font-semibold px-3 py-1 rounded-full border transition-all cursor-pointer flex items-center gap-1.5 ${copied
+                  ? "bg-emerald-950/80 text-emerald-300 border-emerald-800"
+                  : "bg-slate-800/80 hover:bg-slate-800 text-slate-300 border-slate-700/80"
+                }`}
+              title="Copy shareable link for another person"
+            >
+              {copied ? "Link Copied!" : "Share Group"}
+            </button>
+            <span className="text-xs font-semibold px-2.5 py-1 bg-indigo-950/70 text-indigo-300 rounded-full border border-indigo-800/60">
+              {memberList.length} members
+            </span>
+          </div>
         </div>
       </header>
 
@@ -156,19 +180,18 @@ export default function GroupPage() {
 
                   <div className="flex items-center gap-2 shrink-0">
                     <span
-                      className={`text-xs font-bold font-mono px-2 py-0.5 rounded-md ${
-                        isZero
+                      className={`text-xs font-bold font-mono px-2 py-0.5 rounded-md ${isZero
                           ? "text-slate-400 bg-slate-800/80 border border-slate-700/60"
                           : isPositive
-                          ? "text-emerald-300 bg-emerald-950/50 border border-emerald-800/60"
-                          : "text-rose-300 bg-rose-950/50 border border-rose-800/60"
-                      }`}
+                            ? "text-emerald-300 bg-emerald-950/50 border border-emerald-800/60"
+                            : "text-rose-300 bg-rose-950/50 border border-rose-800/60"
+                        }`}
                     >
                       {isZero
                         ? "Settled"
                         : isPositive
-                        ? `+${formatINR(balPaise)}`
-                        : `-${formatINR(Math.abs(balPaise))}`}
+                          ? `+${formatINR(balPaise)}`
+                          : `-${formatINR(Math.abs(balPaise))}`}
                     </span>
 
                     {memberList.length > 1 && (
@@ -191,21 +214,19 @@ export default function GroupPage() {
         <div className="flex border border-slate-800 rounded-xl bg-[#0f1422] p-1 gap-1">
           <button
             onClick={() => setActiveTab("manual")}
-            className={`flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all cursor-pointer flex items-center justify-center gap-2 ${
-              activeTab === "manual"
+            className={`flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all cursor-pointer flex items-center justify-center gap-2 ${activeTab === "manual"
                 ? "bg-slate-800 text-indigo-400 shadow-xs"
                 : "text-slate-400 hover:text-slate-200"
-            }`}
+              }`}
           >
             Manual Expense
           </button>
           <button
             onClick={() => setActiveTab("scan")}
-            className={`flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all cursor-pointer flex items-center justify-center gap-2 ${
-              activeTab === "scan"
+            className={`flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all cursor-pointer flex items-center justify-center gap-2 ${activeTab === "scan"
                 ? "bg-slate-800 text-indigo-400 shadow-xs"
                 : "text-slate-400 hover:text-slate-200"
-            }`}
+              }`}
           >
             Scan Receipt (OCR)
           </button>
